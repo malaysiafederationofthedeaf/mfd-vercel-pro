@@ -8,15 +8,27 @@ function formatDateToSeed(date = new Date()) {
 }
 
 async function getTotalEntries(apiUrl) {
-  const res = await fetch(`${apiUrl}?pagination[page]=1&pagination[pageSize]=1`);
-  const json = await res.json();
-  return json.meta.pagination.total;
+  try {
+    const res = await fetch(`${apiUrl}?pagination[page]=1&pagination[pageSize]=1`);
+    if (!res.ok) return 0;
+    const json = await res.json();
+    return json?.meta?.pagination?.total || 0;
+  } catch (err) {
+    console.error("Error fetching SOTD total:", err);
+    return 0;
+  }
 }
 
 async function fetchPageEntries(apiUrl, pageNum, pageSize) {
-  const res = await fetch(`${apiUrl}?populate=*&pagination[page]=${pageNum}&pagination[pageSize]=${pageSize}`);
-  const json = await res.json();
-  return json.data || [];
+  try {
+    const res = await fetch(`${apiUrl}?populate=*&pagination[page]=${pageNum}&pagination[pageSize]=${pageSize}`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data || [];
+  } catch (err) {
+    console.error("Error fetching SOTD entries:", err);
+    return [];
+  }
 }
 
 export async function getSignOfTheDayLightweight() {

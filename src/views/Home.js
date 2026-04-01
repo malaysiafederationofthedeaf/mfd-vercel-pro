@@ -61,11 +61,10 @@ const Home = () => {
         // Fetch Sign of the Day from API or local store cache
         const sotd = await getSignOfTheDayLightweight();
         setSignOfDay(sotd);
-
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching home page data:", error);
-
+      } finally {
+        setLoading(false);
       }
     };
 
