@@ -142,7 +142,7 @@ class Store extends EventEmitter {
   getCategoryImgSrc(kumpulanKategori) {
     const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
     const exactName = "Category_" + kumpulanKategori.trim();
-    return `${baseUrl}/Assets/category/${encodeURIComponent(exactName)}.jpg`;
+    return `${baseUrl}/category/${encodeURIComponent(exactName)}.jpg`;
   }
 
   getFallbackImage() {
@@ -154,7 +154,7 @@ class Store extends EventEmitter {
     if (!perkataan) return this.getFallbackImage();
     const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
     const exactName = perkataan.trim();
-    return `${baseUrl}/Assets/vocab/${encodeURIComponent(exactName)}.jpg`;
+    return `${baseUrl}/vocab/${encodeURIComponent(exactName)}.jpg`;
   }
 
   // format string to lower case, replace space with dash, remove '?' and '/'

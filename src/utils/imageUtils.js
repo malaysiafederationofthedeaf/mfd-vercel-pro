@@ -9,7 +9,7 @@ export const getVocabImageUrl = (vocab) => {
   // If blob images are enabled, generate blob URL from exact perkataan (untouched filenames)
   if (useBlobImages && blobBaseUrl && vocab?.perkataan) {
     const exactName = vocab.perkataan.trim();
-    return `${blobBaseUrl}/Assets/vocab/${encodeURIComponent(exactName)}.jpg`;
+    return `${blobBaseUrl}/vocab/${encodeURIComponent(exactName)}.jpg`;
   }
 
   // No fallback to Cloudinary - return null to trigger error handling
