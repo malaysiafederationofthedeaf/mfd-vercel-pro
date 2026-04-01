@@ -61,7 +61,7 @@ module.exports = async function handler(req, res) {
              cg.group_category as "GroupCategory", 
              cg.remark as "cg_Remark"
       FROM bims
-      LEFT JOIN bims_category_group_links links ON bims.id = links.bim_id
+      LEFT JOIN bims_category_group_lnk links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
       WHERE 1=1
     `;
@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
     let countQuery = `
       SELECT count(*) as total
       FROM bims
-      LEFT JOIN bims_category_group_links links ON bims.id = links.bim_id
+      LEFT JOIN bims_category_group_lnk links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
       WHERE 1=1
     `;
