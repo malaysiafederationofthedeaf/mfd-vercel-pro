@@ -2,6 +2,9 @@
     "name": "ggb-mfd-project",
     "version": "1.0.0",
     "private": true,
+    "engines": {
+        "node": "18.x"
+    },
     "dependencies": {
         "@neondatabase/serverless": "^1.0.2",
         "aos": "^3.0.0-beta.6",
