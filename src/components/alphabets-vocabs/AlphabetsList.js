@@ -34,8 +34,9 @@ const AlphabetsList = ({ vocabs, alphabet }) => {
                     src={vocabImgSrc}
                     alt={vocab.word}
                     className="vocab-image"
+                    loading="lazy"
+                    style={{ objectFit: 'cover' }}
                     onError={(e) => handleImageError(e, vocab)}
-                  />
                   />
                 </Col>   
                 <Col className="pl-2 pr-0">

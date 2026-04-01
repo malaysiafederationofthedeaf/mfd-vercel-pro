@@ -45,6 +45,8 @@ const VocabList = ({ vocabs, group, category }) => {
                   <img
                     src={vocabImgSrc}
                     alt={vocab.word}
+                    loading="lazy"
+                    style={{ objectFit: 'cover' }}
                     className="vocab-image"
                     onError={(e) => handleImageError(e, vocab)}
                   />

@@ -21,12 +21,6 @@ const GroupDetail = ({ category, group }) => {
   const categoryFormatted = Store.formatString(category.category);
   const basePath = `/groups/${groupFormatted}`
 
-  useEffect(() => {
-    getImageWithFallback(categoryImgSrc, fallback, (resolvedURL) => {
-      setBgImage(resolvedURL);
-    });
-  }, [categoryImgSrc]);
-
   return (
     <Col lg="6" sm="12">
       <div className="category-detail-card-wrapper">
@@ -34,10 +28,14 @@ const GroupDetail = ({ category, group }) => {
           <Card small className="card-post card-post--aside card-post--1">
             <Col xs="4" lg="6" md="6" sm="6">
               <ZoomIn>
-                <div
+                <img
+                  src={categoryImgSrc}
+                  loading="lazy"
+                  alt={isMalay ? category.kategori : category.category}
                   className="card-post__image"
-                  style={{ backgroundImage: bgImage }}
-                ></div>
+                  style={{ width: "100%", height: "100%", minHeight: "150px", objectFit: "cover", display: "block", backgroundColor: "#f0f0f0" }}
+                  onError={(e) => { e.target.onerror = null; e.target.src = fallback; }}
+                />
               </ZoomIn>
             </Col>
             <Col xs="8" lg="6" md="6" sm="6">

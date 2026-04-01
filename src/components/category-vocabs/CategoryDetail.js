@@ -21,15 +21,7 @@ const CategoryDetail = ({ categoryItem, group, groupKey, noOfCard }) => {
   const linkToPath = categoryItem.new ? `${basePath}/${Store.formatString(categoryItem.word)}` : `${basePath}/${categoryFormatted}`;
   const imgSrc = categoryItem.new ? getVocabImageUrl(categoryItem) : Store.getCategoryImgSrc(categoryItem.kategori);
   const fallback = getFallbackImageUrl();
-  const [bgImage, setBgImage] = useState("");
-
-  useEffect(() => {
-    getImageWithFallback(imgSrc, fallback, (resolvedURL) => {
-      setBgImage(resolvedURL);
-    });
-  }, [imgSrc]);
-
-  // determine if the word to be displayed is Word from New Sign; or a Category
+  // remove the bgImage useEffect hack
   const categoryWord = categoryItem.new ? isMalay ? categoryItem.perkataan : categoryItem.word : isMalay ? categoryItem.kategori : categoryItem.category;
 
   // get the length of word; or the longest substring if it contains space
@@ -91,10 +83,14 @@ const CategoryDetail = ({ categoryItem, group, groupKey, noOfCard }) => {
     <Link to={linkToPath}>
       <Card small className="card-post card-post--1">
         <ZoomIn>
-          <div
+          <img
+            src={imgSrc}
+            loading="lazy"
+            alt={categoryWord}
             className="card-post__image"
-            style={{ backgroundImage: bgImage }}>
-            </div>
+            style={{ width: "100%", height: "150px", objectFit: "cover", display: "block", backgroundColor: "#f0f0f0" }}
+            onError={(e) => { e.target.onerror = null; e.target.src = fallback; }}
+          />
         </ZoomIn>
         <CardBody>
           <CardTitle className="card-title">

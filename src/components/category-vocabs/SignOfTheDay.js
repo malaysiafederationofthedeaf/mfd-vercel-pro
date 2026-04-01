@@ -92,6 +92,8 @@ const imgSrc = getVocabImageUrl(wordItem);
                 <img
                   src={imgSrc}
                   alt={wordItem.word}
+                  loading="lazy"
+                  style={{ objectFit: "cover" }}
                   className="card-post__image"
                   onError={(e) => handleImageError(e, wordItem)}
                 />
