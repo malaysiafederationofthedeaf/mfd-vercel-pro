@@ -6,10 +6,10 @@ module.exports = async function handler(req, res) {
       throw new Error("DATABASE_URL is not set in Vercel Environment Variables! Please add it in your project Settings > Environment Variables.");
     }
 
-    let page = req.query['pagination[page]'] ? parseInt(req.query['pagination[page]']) : 1;
-    let pageSize = req.query['pagination[pageSize]'] ? parseInt(req.query['pagination[pageSize]']) : 90;
+    let page = req.query?.pagination?.page || req.query['pagination[page]'] ? parseInt(req.query?.pagination?.page || req.query['pagination[page]']) : 1;
+    let pageSize = req.query?.pagination?.pageSize || req.query['pagination[pageSize]'] ? parseInt(req.query?.pagination?.pageSize || req.query['pagination[pageSize]']) : 90;
 
-    const opFilters = req.query['filters[Remark][$ne]'];
+    const opFilters = (req.query?.filters && req.query.filters.Remark && req.query.filters.Remark['$ne']) || req.query['filters[Remark][$ne]'];
     const hasUnpublishedFilter = opFilters === 'Unpublished';
 
     let resultRows = [];

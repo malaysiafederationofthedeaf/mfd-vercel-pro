@@ -6,31 +6,34 @@ module.exports = async function handler(req, res) {
       throw new Error("DATABASE_URL is not set in Vercel. Please set it in Settings > Environment Variables!");
     }
 
-    let page = req.query['pagination[page]'] ? parseInt(req.query['pagination[page]']) : 1;
+    let page = req.query?.pagination?.page || req.query['pagination[page]'] ? parseInt(req.query?.pagination?.page || req.query['pagination[page]']) : 1;
     let limit = 25;
-    if (req.query['pagination[pageSize]']) limit = parseInt(req.query['pagination[pageSize]']);
-    else if (req.query['pagination[limit]']) limit = parseInt(req.query['pagination[limit]']);
+    if (req.query?.pagination?.pageSize || req.query['pagination[pageSize]']) limit = parseInt(req.query?.pagination?.pageSize || req.query['pagination[pageSize]']);
+    else if (req.query?.pagination?.limit || req.query['pagination[limit]']) limit = parseInt(req.query?.pagination?.limit || req.query['pagination[limit]']);
 
     const offset = (page - 1) * limit;
 
-    const filters = {};
-    for (const key of Object.keys(req.query)) {
-      const match = key.match(/filters\[(.*?)\](\[(.*?)\])?/);
-      if (match) {
-        const field = match[1];
-        let op = match[3] || '$eq';
-        
-        // Deep properties parsing like filters[category_group][GroupCategory][$eq]
-        if (field === 'category_group' && match[3]) {
-          const deepMatch = key.match(/filters\[category_group\]\[(.*?)\]\[(.*?)\]/);
-          if (deepMatch) {
-            filters.category_group = filters.category_group || {};
-            filters.category_group[deepMatch[1]] = filters.category_group[deepMatch[1]] || {};
-            filters.category_group[deepMatch[1]][deepMatch[2]] = req.query[key];
+    let filters = {};
+    if (req.query.filters && typeof req.query.filters === 'object') {
+      filters = req.query.filters;
+    } else {
+      for (const key of Object.keys(req.query)) {
+        const match = key.match(/filters\[(.*?)\](\[(.*?)\])?/);
+        if (match) {
+          const field = match[1];
+          let op = match[3] || '$eq';
+          
+          if (field === 'category_group' && match[3]) {
+            const deepMatch = key.match(/filters\[category_group\]\[(.*?)\]\[(.*?)\]/);
+            if (deepMatch) {
+              filters.category_group = filters.category_group || {};
+              filters.category_group[deepMatch[1]] = filters.category_group[deepMatch[1]] || {};
+              filters.category_group[deepMatch[1]][deepMatch[2]] = req.query[key];
+            }
+          } else {
+            filters[field] = filters[field] || {};
+            filters[field][op] = req.query[key];
           }
-        } else {
-          filters[field] = filters[field] || {};
-          filters[field][op] = req.query[key];
         }
       }
     }
