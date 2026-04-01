@@ -1,4 +1,8 @@
-const { neon, Pool, neonConfig } = require('@neondatabase/serverless');
+const { Pool } = require('pg');
+
+// Use the standard 'pg' library which uses TCP+TLS — works reliably
+// in all Node.js environments including Vercel serverless functions.
+// No WebSocket required.
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -9,33 +13,12 @@ if (!DATABASE_URL) {
   );
 }
 
-// Detect if connectionstring uses the pooler endpoint (has '-pooler.' in host).
-// Pooler endpoints only support WebSocket/Postgres protocol.
-// Non-pooler (direct) endpoints support both WebSocket AND neon() HTTP.
-const isPoolerUrl = DATABASE_URL.includes('-pooler.');
-
-let pool;
-
-if (isPoolerUrl) {
-  // For pooler URLs: use Pool with WebSocket.
-  // Node 22+ has globalThis.WebSocket built-in.
-  if (typeof globalThis.WebSocket !== 'undefined') {
-    neonConfig.webSocketConstructor = globalThis.WebSocket;
-  } else {
-    try { neonConfig.webSocketConstructor = require('ws'); } catch (e) {}
-  }
-  pool = new Pool({ connectionString: DATABASE_URL });
-  pool.query = pool.query.bind(pool);
-} else {
-  // For direct (non-pooler) URLs: use neon() HTTP client which is simpler.
-  // Wrap it in a pool-compatible interface.
-  const sql = neon(DATABASE_URL);
-  pool = {
-    query: async (text, params = []) => {
-      // neon().query() returns a pg-compatible {rows: [...]} object
-      return sql.query(text, params);
-    }
-  };
-}
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // required for Neon's TLS connection
+  max: 1,                             // keep connections minimal in serverless
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 5000,
+});
 
 module.exports = { pool };

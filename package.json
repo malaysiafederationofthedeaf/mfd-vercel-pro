@@ -24,6 +24,7 @@
         "levenshtein": "^1.0.5",
         "lodash.find": "^4.6.0",
         "lodash.pick": "^4.4.0",
+        "pg": "^8.20.0",
         "puppeteer": "^24.7.2",
         "react": "^16.14.0",
         "react-animations": "^1.0.0",
