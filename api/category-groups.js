@@ -18,21 +18,21 @@ module.exports = async function handler(req, res) {
 
     if (filters && filters.Remark && filters.Remark['$ne'] === 'Unpublished') {
        const resQuery = await pool.query(
-         `SELECT id, "KumpulanKategori", "GroupCategory", "Remark" 
+         `SELECT id, kumpulan_kategori as "KumpulanKategori", group_category as "GroupCategory", remark as "Remark" 
           FROM category_groups 
-          WHERE "Remark" IS NULL OR "Remark" != 'Unpublished'
+          WHERE remark IS NULL OR remark != 'Unpublished'
           LIMIT $1 OFFSET $2`, 
          [pageSize, offset]
        );
        resultRows = resQuery.rows;
 
        const resCount = await pool.query(
-         `SELECT count(*) as total FROM category_groups WHERE "Remark" IS NULL OR "Remark" != 'Unpublished'`
+         `SELECT count(*) as total FROM category_groups WHERE remark IS NULL OR remark != 'Unpublished'`
        );
        countRows = resCount.rows;
     } else {
        const resQuery = await pool.query(
-         `SELECT id, "KumpulanKategori", "GroupCategory", "Remark" 
+         `SELECT id, kumpulan_kategori as "KumpulanKategori", group_category as "GroupCategory", remark as "Remark" 
           FROM category_groups 
           LIMIT $1 OFFSET $2`, 
          [pageSize, offset]

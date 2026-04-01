@@ -17,20 +17,20 @@ module.exports = async function handler(req, res) {
 
     let baseQuery = `
       SELECT bims.id as "id", 
-             bims."Perkataan" as "Perkataan", 
-             bims."Word" as "Word", 
-             bims."Tag" as "Tag", 
-             bims."Order" as "Order", 
-             bims."New" as "New", 
-             bims."Video" as "Video", 
-             bims."Image_Status" as "Image_Status", 
-             bims."Video_Status" as "Video_Status", 
-             bims."Remark" as "Remark",
+             bims.perkataan as "Perkataan", 
+             bims.word as "Word", 
+             bims.tag as "Tag", 
+             bims."order" as "Order", 
+             bims.new as "New", 
+             bims.video as "Video", 
+             bims.image_status as "Image_Status", 
+             bims.video_status as "Video_Status", 
+             bims.remark as "Remark",
              bims.created_at as "createdAt",
              cg.id as "cg_id", 
-             cg."KumpulanKategori", 
-             cg."GroupCategory", 
-             cg."Remark" as "cg_Remark"
+             cg.kumpulan_kategori as "KumpulanKategori", 
+             cg.group_category as "GroupCategory", 
+             cg.remark as "cg_Remark"
       FROM bims
       LEFT JOIN bims_category_group_links links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
@@ -52,16 +52,16 @@ module.exports = async function handler(req, res) {
     // Build filters dynamically
     if (filters) {
       if (filters.category_group && filters.category_group.GroupCategory && filters.category_group.GroupCategory['$eq']) {
-        baseQuery += ` AND cg."GroupCategory" = $${paramIndex}`;
-        countQuery += ` AND cg."GroupCategory" = $${paramIndex}`;
+        baseQuery += ` AND cg.group_category = $${paramIndex}`;
+        countQuery += ` AND cg.group_category = $${paramIndex}`;
         values.push(filters.category_group.GroupCategory['$eq']);
         countValues.push(filters.category_group.GroupCategory['$eq']);
         paramIndex++;
       }
 
       if (filters.New && filters.New['$eq']) {
-        baseQuery += ` AND bims."New" = $${paramIndex}`;
-        countQuery += ` AND bims."New" = $${paramIndex}`;
+        baseQuery += ` AND bims.new = $${paramIndex}`;
+        countQuery += ` AND bims.new = $${paramIndex}`;
         values.push(filters.New['$eq']);
         countValues.push(filters.New['$eq']);
         paramIndex++;
@@ -71,15 +71,15 @@ module.exports = async function handler(req, res) {
       for (const key of exactFilterKeys) {
         if (filters[key]) {
           if (filters[key]['$containsi']) {
-            baseQuery += ` AND bims."${key}" ILIKE $${paramIndex}`;
-            countQuery += ` AND bims."${key}" ILIKE $${paramIndex}`;
+            baseQuery += ` AND bims.${key.toLowerCase()} ILIKE $${paramIndex}`;
+            countQuery += ` AND bims.${key.toLowerCase()} ILIKE $${paramIndex}`;
             values.push(`%${filters[key]['$containsi']}%`);
             countValues.push(`%${filters[key]['$containsi']}%`);
             paramIndex++;
           }
           if (filters[key]['$startsWith']) {
-            baseQuery += ` AND bims."${key}" ILIKE $${paramIndex}`;
-            countQuery += ` AND bims."${key}" ILIKE $${paramIndex}`;
+            baseQuery += ` AND bims.${key.toLowerCase()} ILIKE $${paramIndex}`;
+            countQuery += ` AND bims.${key.toLowerCase()} ILIKE $${paramIndex}`;
             values.push(`${filters[key]['$startsWith']}%`);
             countValues.push(`${filters[key]['$startsWith']}%`);
             paramIndex++;
