@@ -156,13 +156,11 @@ class Store extends EventEmitter {
   }
 
   // get image for Category (from vercel blob)
+  // Filenames in blob were uploaded as-is (e.g. "Category_Aktiviti & Peristiwa.jpg")
+  // We use encodeURIComponent so the URL is valid while matching the actual blob filename.
   getCategoryImgSrc(kumpulanKategori) {
-    const kategoriPublicId = "Category_" + kumpulanKategori
-      .replace(/&/g, "_")
-      .replace(/[()]/g, "")
-      .replace(/\s+/g, "_") // Remove other special characters if needed
-      .replace(/_+/g, "_"); // Collapse multiple underscores into one
-      return `${_store.imageURL}/category/${kategoriPublicId}.jpg`;
+    const kategoriPublicId = "Category_" + kumpulanKategori;
+    return `${_store.imageURL}/category/${encodeURIComponent(kategoriPublicId)}.jpg`;
   }
 
   getFallbackImage() {
@@ -170,16 +168,11 @@ class Store extends EventEmitter {
   }
 
   // get image for vocab (from vercel blob)
+  // Filenames in blob were uploaded as-is (e.g. "Pengembara (Beg galas).jpg")
+  // We use encodeURIComponent so the URL is valid while matching the actual blob filename.
   getSignImgSrc(perkataan) {
-    const perkataanPublicId = perkataan
-      .trim()
-      .replace(/&/g, "_")           // Replace '&' with '_'
-      .replace(/[()'’]/g, "")        // Remove '(', ')', and single quote (')
-      .replace(/,/g, "")            // Remove commas
-      .replace(/!/g, "%21")         // Replace '!' with '%21'
-      .replace(/\//g, "-")          // Replace '/' with '-'
-      .replace(/\s+/g, "_");        // Replace spaces with '_'
-      return `${_store.imageURL}/vocab/${perkataanPublicId}.jpg`;
+    const perkataanPublicId = perkataan.trim();
+    return `${_store.imageURL}/vocab/${encodeURIComponent(perkataanPublicId)}.jpg`;
   }
 
   // format string to lower case, replace space with dash, and remove '?' and '/' (for link path name)
