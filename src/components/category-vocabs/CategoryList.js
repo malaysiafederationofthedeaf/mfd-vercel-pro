@@ -69,8 +69,8 @@ const CategoryList = ({ category, group, groupKey }) => {
           activeItemIndex={activeItemIndex}
           activePosition={"center"}
           chevronWidth={30}
-          rightChevron={<i className="material-icons">arrow_forward_ios</i>}
-          leftChevron={<i className="material-icons">arrow_back_ios</i>}
+          rightChevron={<span onClick={e => e.preventDefault()}><i className="material-icons">arrow_forward_ios</i></span>}
+          leftChevron={<span onClick={e => e.preventDefault()}><i className="material-icons">arrow_back_ios</i></span>}
           outsideChevron={false}
         >
           {category.map((categoryItem, key) => (
