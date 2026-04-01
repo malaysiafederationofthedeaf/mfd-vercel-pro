@@ -1,0 +1,180 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+@import "colors";
+@import "variables";
+
+$font-title: "Libre Baskerville", serif;
+$font-size-title: 38px;
+$font-weight-title: 700;
+
+$font-body-monospace: "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; 
+
+$font-subtitle: $font-title;
+$font-size-subtitle: 35px;
+$font-weight-subtitle: 500;
+
+$font-body: 'Source Sans Pro',sans-serif;
+$font-size-body: 16px;
+$font-weight-body: 400;
+
+$font-nav:  "Libre Baskerville", sans-serif;
+$font-size-nav: 15px;
+$font-weight-nav: 500;
+
+// Fonts Variables
+$font-nav-link: $font-body;
+$font-button: $font-body;
+
+@mixin title-font {
+    font: {
+        family: $font-title;
+        weight: $font-weight-title;
+        size: $font-size-title;
+    }
+    color: $title-font-color;
+    text-transform: uppercase;
+}
+
+@mixin subtitle-font {
+    font: {
+        family: $font-subtitle;
+        weight: $font-weight-subtitle;
+        size: $font-size-subtitle;
+    }
+    color: $subtitle-font-color;
+}
+
+@mixin body-font {
+    font: {
+        family: $font-body;
+        weight: $font-weight-body;
+        size: $font-size-body;
+    }
+    color: $body-font-color;
+    letter-spacing: 1px;
+}
+
+@mixin button-font {
+    font: {
+        family: $font-button;
+        weight: $font-weight-body;
+        size: $font-size-body;
+    }
+    color: $button-text-color;
+}
+
+@mixin nav-item-font {
+    font: {
+        family: $font-nav;
+        weight: $font-weight-nav;
+        size: $font-size-nav;
+    }
+    text-transform: uppercase;  
+}
+
+@mixin h1 {
+    @include title-font;  
+    @media (max-width: $breakpoint-md) {
+        font-size: 35px;
+    }     
+    @media (max-width: $breakpoint-md) {
+        font-size: 32px;
+    }    
+    @media (max-width: $breakpoint-sm) {
+        font-size: 30px;
+    }      
+    @media (max-width: $breakpoint-xs) {
+        font-size: 28px;
+    }     
+} 
+ 
+@mixin h2 {
+    @include subtitle-font;
+    margin: 10px;
+    @media (max-width: $breakpoint-md) {
+        font-size: 30px;
+    }    
+    @media (max-width: $breakpoint-sm) {
+        font-size: 26px;
+    }  
+    @media (max-width: $breakpoint-xs) {
+        font-size: 22px;
+    }       
+}  
+
+@mixin h3 {
+    font: {
+        family: $font-body;
+        weight: 300;
+        size: 24px;
+    }
+    margin-bottom: 10px;   
+    @media (max-width: $breakpoint-lg) {
+        font-size: 22px;
+    }    
+    @media (max-width: $breakpoint-md) {
+        font-size: 20px;
+    }
+    @media (max-width: $breakpoint-sm) {
+        font-size: 17px;
+    }     
+}
+
+@mixin h4 {
+    font: {
+        family: $font-body;
+        weight: 250;
+        size: 21px;
+    }
+    color: $title-font-color;
+    margin-bottom: 10px;   
+    @media (max-width: $breakpoint-lg) {
+        font-size: 18px;
+    }    
+    @media (max-width: $breakpoint-md) {
+        font-size: 16px;
+    }
+    @media (max-width: $breakpoint-sm) {
+        font-size: 14px;
+    }       
+}
+
+@mixin page-title {
+    @include title-font;
+    margin: 3;
+    padding: 3;
+    @media (max-width: $breakpoint-md) {
+        text-align: center;
+        font-size: 35px;
+    }
+    @media (max-width: $breakpoint-sm) {
+        text-align: center;
+        font-size: 30px;
+    }    
+}
+
+@mixin page-subtitle {
+    @include subtitle-font;
+    margin: 3;
+    letter-spacing: 2px;
+    @media (max-width: $breakpoint-md) {
+        font-size: 25px;
+    }
+    @media (max-width: $breakpoint-sm) {
+        text-align: center;
+        font-size: 22px;
+    }    
+}
+
+@mixin card-title { 
+    font: {
+        weight: bold;
+        size: 17px;
+    }
+    color: $color-secondary-dark;
+    text-transform: uppercase;
+    overflow: hidden;  
+    
+    @media (min-width: 768px) {
+        font-size: 20px;
+    }
+}

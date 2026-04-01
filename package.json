@@ -1,0 +1,59 @@
+{
+    "name": "ggb-mfd-project",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "aos": "^3.0.0-beta.6",
+        "axios": "^1.7.3",
+        "body-parser": "^2.2.0",
+        "bootstrap": "^5.3.3",
+        "flag-icon-css": "^4.1.7",
+        "flux": "^4.0.4",
+        "i18next": "^23.12.2",
+        "i18next-browser-languagedetector": "^8.0.0",
+        "i18next-http-backend": "^2.5.2",
+        "js-cookie": "^3.0.5",
+        "js-levenshtein": "^1.1.6",
+        "levenshtein": "^1.0.5",
+        "lodash.find": "^4.6.0",
+        "lodash.pick": "^4.4.0",
+        "puppeteer": "^24.7.2",
+        "react": "^16.14.0",
+        "react-animations": "^1.0.0",
+        "react-autocomplete": "^1.8.1",
+        "react-dom": "^16.14.0",
+        "react-ga": "^3.3.1",
+        "react-i18next": "^15.0.1",
+        "react-items-carousel": "^2.8.0",
+        "react-player": "^2.16.0",
+        "react-quill": "^2.0.0",
+        "react-router-dom": "^6.26.0",
+        "react-router-hash-link": "^2.4.3",
+        "react-scripts": "5.0.1",
+        "react-select": "^5.8.0",
+        "sass": "^1.77.8",
+        "shards-react": "^1.0.3",
+        "styled-components": "^6.1.12",
+        "web-vitals": "^4.2.3",
+        "webpack": "^5.98.0",
+        "xlsx": "^0.18.5"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --reporters=jest-html-reporters",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
+    "devDependencies": {
+        "jest-html-reporters": "^3.1.7"
+    }
+}
