@@ -47,7 +47,7 @@ const VocabList = ({ vocabs, group, category }) => {
                     className="vocab-image"
                     onError={(e) => {
                       e.target.onerror = null; // prevent infinite loop
-                      e.target.src = `https://res.cloudinary.com/dvkbfpll1/image/upload/v1745120594/image-coming-soon.jpg`; //if there is no image url
+                      e.target.src = `${process.env.REACT_APP_BLOB_BASE_URL || ""}/image-coming-soon.jpg`; //if there is no image url
                     }
                   }
                   />

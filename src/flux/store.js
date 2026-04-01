@@ -16,7 +16,7 @@ let _store = {
   featuredVideosPlaylistId: "PLEztM-ga58Y4s6t5pac5uJKLeSSuspioQ",
   youtubeAPIKey: "AIzaSyBIk86nsIH0h4HSEgHPLI8bku6WKQlizDk",
   featuredVideos: [],
-  imageURL: "https://res.cloudinary.com/dvkbfpll1/image/upload/",
+  imageURL: process.env.REACT_APP_BLOB_BASE_URL || "",
 };
 
 class Store extends EventEmitter {
@@ -143,17 +143,17 @@ class Store extends EventEmitter {
     return "https://youtu.be/" + videoId;
   }
 
-  // get image for Category (from cloudinary)
+  // get image for Category (from vercel blob)
   getCategoryImgSrc(kumpulanKategori) {
     const kategoriPublicId = "Category_" + kumpulanKategori
       .replace(/&/g, "_")
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_") // Remove other special characters if needed
       .replace(/_+/g, "_"); // Collapse multiple underscores into one
-      return `${_store.imageURL}f_auto,q_auto/${kategoriPublicId}.jpg`;
+      return `${_store.imageURL}/category/${kategoriPublicId}.jpg`;
   }
 
-  // get image for vocab (from cloudinary)
+  // get image for vocab (from vercel blob)
   getSignImgSrc(perkataan) {
     const perkataanPublicId = perkataan
       .trim()
@@ -163,7 +163,7 @@ class Store extends EventEmitter {
       .replace(/!/g, "%21")         // Replace '!' with '%21'
       .replace(/\//g, "-")          // Replace '/' with '-'
       .replace(/\s+/g, "_");        // Replace spaces with '_'
-      return `${_store.imageURL}f_auto,q_auto/${perkataanPublicId}.jpg`;
+      return `${_store.imageURL}/vocab/${perkataanPublicId}.jpg`;
   }
 
   // format string to lower case, replace space with dash, and remove '?' and '/' (for link path name)
