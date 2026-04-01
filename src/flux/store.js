@@ -5,18 +5,6 @@ import Constants from "./constants";
 import getMainNavItems from "../data/main-nav-items";
 import getAlphabets from "../data/alphabets/alphabets-arrays";
 
-const parseBlobUrl = (urlStr) => {
-  if (!urlStr) return "";
-  if (urlStr.startsWith("vercel_blob_rw_")) {
-    const parts = urlStr.split("_");
-    if (parts.length >= 4) {
-      return `https://${parts[3]}.public.blob.vercel-storage.com`;
-    }
-  }
-  // Trim trailing slash if present
-  return urlStr.endsWith("/") ? urlStr.slice(0, -1) : urlStr;
-};
-
 let _store = {
   menuVisible: false,
   mainNavItems: getMainNavItems(),
@@ -28,7 +16,7 @@ let _store = {
   featuredVideosPlaylistId: "PLEztM-ga58Y4s6t5pac5uJKLeSSuspioQ",
   youtubeAPIKey: "AIzaSyBIk86nsIH0h4HSEgHPLI8bku6WKQlizDk",
   featuredVideos: [],
-  imageURL: parseBlobUrl(process.env.REACT_APP_BLOB_BASE_URL),
+  imageURL: "https://res.cloudinary.com/dvkbfpll1/image/upload/",
 };
 
 class Store extends EventEmitter {
@@ -81,7 +69,6 @@ class Store extends EventEmitter {
     this.emit(Constants.CHANGE);
   }
 
-  // Add this method to debug the store state
   logStoreState() {
     console.log("Store state:", {
       vocabsItems: _store.vocabsItems.length,
@@ -91,22 +78,18 @@ class Store extends EventEmitter {
     });
   }
 
-  // store all entries from BIM sheet
   storeExcel(value) {
     console.log("Storing vocab items:", value.length);
     _store.vocabsItems = value;
     this.emit(Constants.CHANGE);
   }
 
-  // store all entries from Group sheet
   storeExcelGroup(value) {
     console.log("Storing group category items:", value.length);
-    _store.groupCategoryItems = value;              // get all entries from Group sheet
+    _store.groupCategoryItems = value;
     this.emit(Constants.CHANGE);
-    _store.groupItems = this.getGroupItems();       // get groups (unique)
-    _store.categoryItems = this.getCategoryItems(); // get groups and categories pair (unique)
-    
-    // Log the processed data for debugging
+    _store.groupItems = this.getGroupItems();
+    _store.categoryItems = this.getCategoryItems();
     console.log("Processed group items:", _store.groupItems.length);
     console.log("Processed category items:", _store.categoryItems.length);
   }
@@ -155,30 +138,36 @@ class Store extends EventEmitter {
     return "https://youtu.be/" + videoId;
   }
 
-  // get image for Category (from vercel blob)
-  // Filenames in blob were uploaded as-is (e.g. "Category_Aktiviti & Peristiwa.jpg")
-  // We use encodeURIComponent so the URL is valid while matching the actual blob filename.
+  // get image for Category — exactly as original Cloudinary implementation
   getCategoryImgSrc(kumpulanKategori) {
-    const kategoriPublicId = "Category_" + kumpulanKategori;
-    return `${_store.imageURL}/category/${encodeURIComponent(kategoriPublicId)}.jpg`;
+    const kategoriPublicId = "Category_" + kumpulanKategori
+      .replace(/&/g, "_")
+      .replace(/[()]/g, "")
+      .replace(/\s+/g, "_")
+      .replace(/_+/g, "_");
+    return `${_store.imageURL}f_auto,q_auto/${kategoriPublicId}.jpg`;
   }
 
   getFallbackImage() {
-    return `${_store.imageURL}/image-coming-soon.jpg`;
+    return `${_store.imageURL}f_auto,q_auto/image-coming-soon.jpg`;
   }
 
-  // get image for vocab (from vercel blob)
-  // Filenames in blob were uploaded as-is (e.g. "Pengembara (Beg galas).jpg")
-  // We use encodeURIComponent so the URL is valid while matching the actual blob filename.
+  // get image for vocab — exactly as original Cloudinary implementation
   getSignImgSrc(perkataan) {
-    const perkataanPublicId = perkataan.trim();
-    return `${_store.imageURL}/vocab/${encodeURIComponent(perkataanPublicId)}.jpg`;
+    const perkataanPublicId = perkataan
+      .trim()
+      .replace(/&/g, "_")
+      .replace(/[()'']/g, "")
+      .replace(/,/g, "")
+      .replace(/!/g, "%21")
+      .replace(/\//g, "-")
+      .replace(/\s+/g, "_");
+    return `${_store.imageURL}f_auto,q_auto/${perkataanPublicId}.jpg`;
   }
 
-  // format string to lower case, replace space with dash, and remove '?' and '/' (for link path name)
+  // format string to lower case, replace space with dash, remove '?' and '/'
   formatString(string) {
     if (!string) return '';
-    
     try {
       var stringFormatted = string.toLowerCase().replace(/\s+/g, "-")
       stringFormatted = stringFormatted.replace(/[?/]/g, "")
@@ -188,12 +177,9 @@ class Store extends EventEmitter {
     }
   }
 
-  // format group&category pair (to follow link path name)
   formatGroupCategory(string) {
     if (!string) return '';
-    
     try {
-      // return string.toLowerCase().replace(/\s+/g, "-");
       const groupCat = string.toString().split("/");
       return this.formatString(groupCat[0]) + "/" + this.formatString(groupCat[1]);
     } catch (err) {
