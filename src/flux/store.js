@@ -5,6 +5,18 @@ import Constants from "./constants";
 import getMainNavItems from "../data/main-nav-items";
 import getAlphabets from "../data/alphabets/alphabets-arrays";
 
+const parseBlobUrl = (urlStr) => {
+  if (!urlStr) return "";
+  if (urlStr.startsWith("vercel_blob_rw_")) {
+    const parts = urlStr.split("_");
+    if (parts.length >= 4) {
+      return `https://${parts[3]}.public.blob.vercel-storage.com`;
+    }
+  }
+  // Trim trailing slash if present
+  return urlStr.endsWith("/") ? urlStr.slice(0, -1) : urlStr;
+};
+
 let _store = {
   menuVisible: false,
   mainNavItems: getMainNavItems(),
@@ -16,7 +28,7 @@ let _store = {
   featuredVideosPlaylistId: "PLEztM-ga58Y4s6t5pac5uJKLeSSuspioQ",
   youtubeAPIKey: "AIzaSyBIk86nsIH0h4HSEgHPLI8bku6WKQlizDk",
   featuredVideos: [],
-  imageURL: process.env.REACT_APP_BLOB_BASE_URL || "",
+  imageURL: parseBlobUrl(process.env.REACT_APP_BLOB_BASE_URL),
 };
 
 class Store extends EventEmitter {
@@ -151,6 +163,10 @@ class Store extends EventEmitter {
       .replace(/\s+/g, "_") // Remove other special characters if needed
       .replace(/_+/g, "_"); // Collapse multiple underscores into one
       return `${_store.imageURL}/category/${kategoriPublicId}.jpg`;
+  }
+
+  getFallbackImage() {
+    return `${_store.imageURL}/image-coming-soon.jpg`;
   }
 
   // get image for vocab (from vercel blob)

@@ -13,7 +13,7 @@ const ZoomIn = styled.div`animation: .5s ${keyframes `${zoomIn}`}`;
 const GroupDetail = ({ category, group }) => {
   const { t, i18n } = useTranslation("group-category");
   const categoryImgSrc = Store.getCategoryImgSrc(category.kategori);
-  const fallback = `${process.env.REACT_APP_BLOB_BASE_URL || ""}/image-coming-soon.jpg`;
+  const fallback = Store.getFallbackImage();
   const [bgImage, setBgImage] = useState("");
   const isMalay = i18n.language === "ms";
 
