@@ -16,7 +16,7 @@ let _store = {
   featuredVideosPlaylistId: "PLEztM-ga58Y4s6t5pac5uJKLeSSuspioQ",
   youtubeAPIKey: "AIzaSyBIk86nsIH0h4HSEgHPLI8bku6WKQlizDk",
   featuredVideos: [],
-  imageURL: "https://res.cloudinary.com/dvkbfpll1/image/upload/",
+  imageURL: process.env.REACT_APP_BLOB_BASE_URL || "",
 };
 
 class Store extends EventEmitter {
@@ -138,22 +138,25 @@ class Store extends EventEmitter {
     return "https://youtu.be/" + videoId;
   }
 
-  // get image for Category — exactly as original Cloudinary implementation
+  // get image for Category from Vercel Blob
   getCategoryImgSrc(kumpulanKategori) {
+    const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
     const kategoriPublicId = "Category_" + kumpulanKategori
       .replace(/&/g, "_")
       .replace(/[()]/g, "")
       .replace(/\s+/g, "_")
       .replace(/_+/g, "_");
-    return `${_store.imageURL}f_auto,q_auto/${kategoriPublicId}.jpg`;
+    return `${baseUrl}/category/${kategoriPublicId}.jpg`;
   }
 
   getFallbackImage() {
-    return `${_store.imageURL}f_auto,q_auto/image-coming-soon.jpg`;
+    return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+";
   }
 
-  // get image for vocab — exactly as original Cloudinary implementation
+  // get image for vocab from Vercel Blob
   getSignImgSrc(perkataan) {
+    if (!perkataan) return this.getFallbackImage();
+    const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
     const perkataanPublicId = perkataan
       .trim()
       .replace(/&/g, "_")
@@ -162,7 +165,7 @@ class Store extends EventEmitter {
       .replace(/!/g, "%21")
       .replace(/\//g, "-")
       .replace(/\s+/g, "_");
-    return `${_store.imageURL}f_auto,q_auto/${perkataanPublicId}.jpg`;
+    return `${baseUrl}/vocab/${perkataanPublicId}.jpg`;
   }
 
   // format string to lower case, replace space with dash, remove '?' and '/'

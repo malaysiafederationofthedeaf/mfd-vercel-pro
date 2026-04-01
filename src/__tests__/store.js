@@ -173,17 +173,21 @@ describe('Test format String functions', () => {
 
 // Test get image source functions
 describe('Test get image source functions', () => { 
+    beforeEach(() => {
+        process.env.REACT_APP_BLOB_BASE_URL = "https://your-blob-store.vercel.app";
+    });
+
     test('Test getCategoryImgSrc(kategori)', () => { 
-        expect(Store.getCategoryImgSrc("Abjad")).toEqual(require("../images/bim/category/Abjad.jpg"));
-        
-        expect(Store.getCategoryImgSrc("Non Existing Category")).toEqual(require("../images/general/image-coming-soon.jpg"));        
+        expect(Store.getCategoryImgSrc("Abjad")).toEqual("https://your-blob-store.vercel.app/category/Category_Abjad.jpg");
+        expect(Store.getCategoryImgSrc("Non Existing Category")).toEqual("https://your-blob-store.vercel.app/category/Category_Non_Existing_Category.jpg");        
     });
 
     test('Test getSignImgSrc(kategori)', () => { 
-        expect(Store.getSignImgSrc("Ahad")).toEqual(require("../images/bim/vocab/Ahad.jpg"));
-        expect(Store.getSignImgSrc("Saudara (I)")).toEqual(require("../images/bim/vocab/Saudara (I).jpg"));  
-        expect(Store.getSignImgSrc("14, Empat belas")).toEqual(require("../images/bim/vocab/14, Empat belas.jpg"));  
+        expect(Store.getSignImgSrc("Ahad")).toEqual("https://your-blob-store.vercel.app/vocab/Ahad.jpg");
+        expect(Store.getSignImgSrc("Saudara (I)")).toEqual("https://your-blob-store.vercel.app/vocab/Saudara_-I-.jpg");  
+        expect(Store.getSignImgSrc("14, Empat belas")).toEqual("https://your-blob-store.vercel.app/vocab/14_Empat_belas.jpg");  
 
-        expect(Store.getSignImgSrc("Non Existing Category")).toEqual(require("../images/general/image-coming-soon.jpg"));
+        expect(Store.getSignImgSrc("Non Existing Category")).toEqual("https://your-blob-store.vercel.app/vocab/Non_Existing_Category.jpg");
+        expect(Store.getSignImgSrc("")).toEqual("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+");
     });          
 });
