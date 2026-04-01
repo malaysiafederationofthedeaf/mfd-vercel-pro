@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Col, ListGroup, ListGroupItem, Row } from "shards-react";
 
-import { Store } from "../../flux";import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
-
-const VocabList = ({ vocabs, group, category }) => {import VocabWordPerkataan from "./VocabWordPerkataan";
+import { Store } from "../../flux";
+import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
+import VocabWordPerkataan from "./VocabWordPerkataan";
 
 const VocabList = ({ vocabs, group, category }) => {
   const trimWord = (word) => {

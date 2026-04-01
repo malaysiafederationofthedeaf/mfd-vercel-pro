@@ -9,8 +9,6 @@ import { Store } from "../../flux";
 import { getImageWithFallback } from "../components-overview/ImgSrc";
 import { getVocabImageUrl, getFallbackImageUrl } from "../../utils/imageUtils";
 
-const ZoomIn = styled.div`animation: .5s ${keyframes `${zoomIn}`}`;
-
 const ZoomIn = styled.div`animation: .5s ${keyframes `${zoomIn}`}`;  
 
 const CategoryDetail = ({ categoryItem, group, groupKey, noOfCard }) => {
