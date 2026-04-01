@@ -56,10 +56,10 @@ module.exports = async function handler(req, res) {
              bims.video_status as "Video_Status", 
              bims.remark as "Remark",
              bims.created_at as "createdAt",
-             cg.id as "cg_id", 
-             cg.kumpulan_kategori as "KumpulanKategori", 
-             cg.group_category as "GroupCategory", 
-             cg.remark as "cg_Remark"
+             MAX(cg.id) as "cg_id", 
+             MAX(cg.kumpulan_kategori) as "KumpulanKategori", 
+             MAX(cg.group_category) as "GroupCategory", 
+             MAX(cg.remark) as "cg_Remark"
       FROM bims
       LEFT JOIN bims_category_group_lnk links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
@@ -67,7 +67,7 @@ module.exports = async function handler(req, res) {
     `;
 
     let countQuery = `
-      SELECT count(*) as total
+      SELECT count(DISTINCT bims.id) as total
       FROM bims
       LEFT JOIN bims_category_group_lnk links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
@@ -117,6 +117,9 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Process GROUP BY before ORDER BY to avoid duplicates
+    baseQuery += ` GROUP BY bims.id`;
+
     // Sort Support
     if (sort === 'createdAt:desc') {
       baseQuery += ` ORDER BY bims.created_at DESC`;
@@ -125,7 +128,6 @@ module.exports = async function handler(req, res) {
       baseQuery += ` ORDER BY bims.id ASC`;
     }
 
-    // Pagination Support
     baseQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
     values.push(limit, offset);
 
