@@ -67,19 +67,22 @@ export const fetchVocabsByCategoryFromAPI = async (group, category) => {
     
     console.log(`Fetching vocabs for group/category: ${groupCategoryPair}`);
 
-    // Properly encode the URL parameter
-    const encodedGroupCategoryPair = encodeURIComponent(groupCategoryPair);
-    
     const PAGE_SIZE = 25;
     let page = 1;
     let allData = [];
     let totalItems = 0;
 
     while (true) {
-      const apiUrl = `/api/bims?populate=*&filters[category_group][GroupCategory][$eq]=${encodedGroupCategoryPair}&pagination[page]=${page}&pagination[pageSize]=${PAGE_SIZE}`;
-      console.log(`API URL (Page ${page}): ${apiUrl}`);
-
-      const response = await axios.get(apiUrl);
+      // Use axios params object so axios handles URL encoding exactly once
+      const response = await axios.get(`/api/bims`, {
+        params: {
+          'populate': '*',
+          'filters[category_group][GroupCategory][$eq]': groupCategoryPair,
+          'pagination[page]': page,
+          'pagination[pageSize]': PAGE_SIZE
+        }
+      });
+      console.log(`API request (Page ${page}) for: ${groupCategoryPair}`);
 
       const pageData = response.data?.data ?? [];
       const meta = response.data?.meta?.pagination;

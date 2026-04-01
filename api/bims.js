@@ -39,6 +39,10 @@ module.exports = async function handler(req, res) {
     }
     const sort = req.query.sort;
 
+    // DEBUG: log what query params we received — remove after debugging
+    console.log('[bims.js] raw req.query:', JSON.stringify(req.query));
+    console.log('[bims.js] parsed filters:', JSON.stringify(filters));
+
     let baseQuery = `
       SELECT bims.id as "id", 
              bims.perkataan as "Perkataan", 
