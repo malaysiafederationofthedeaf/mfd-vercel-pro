@@ -1,22 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    }
-  ],
-  "routes": [
-    { "src": "/api/bims", "dest": "/api/bims.js" },
-    { "src": "/api/category-groups", "dest": "/api/category-groups.js" },
-    { "src": "/api/debug", "dest": "/api/debug.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/api/bims", "destination": "/api/bims.js" },
+    { "source": "/api/category-groups", "destination": "/api/category-groups.js" },
+    { "source": "/api/debug", "destination": "/api/debug.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
