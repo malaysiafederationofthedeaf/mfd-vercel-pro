@@ -19,7 +19,7 @@ export const fetchVocabData = async () => {
   while (hasMoreData) {
     try {
       const response = await axios.get(
-        `https://bimsignbank-strapi.onrender.com/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=25`
+        `/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=25`
       );
 
       if (!response.data?.data) {
@@ -157,7 +157,7 @@ export const fetchVocabsByAlphabetFromAPI = async (alphabetFirst) => {
   while (hasMoreData) {
     try {
       const response = await axios.get(
-        `https://bimsignbank-strapi.onrender.com/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=25&filters[${fieldToFilter}][$startsWith]=${uppercaseAlphabet}`
+        `/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=25&filters[${fieldToFilter}][$startsWith]=${uppercaseAlphabet}`
       );
 
       if (!response.data?.data) {
@@ -242,7 +242,7 @@ export const getNewSigns = async () => {
     const locale = getCurrentLocale();
 
     const response = await axios.get(
-      `https://bimsignbank-strapi.onrender.com/api/bims?populate=*&sort=createdAt:desc&pagination[limit]=25`
+      `/api/bims?populate=*&sort=createdAt:desc&pagination[limit]=25`
     );
 
     const transformedData = response.data.data.map((item) => {

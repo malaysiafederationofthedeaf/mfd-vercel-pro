@@ -46,7 +46,7 @@ const SearchInput = () => {
 
       let allData = [];
       for (let page = 1; page <= MAX_PAGES; page++) {
-        const res = await axios.get(`https://bimsignbank-strapi.onrender.com/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=100`);
+        const res = await axios.get(`/api/bims?populate=*&pagination[page]=${page}&pagination[pageSize]=100`);
         const pageData = res.data?.data || [];
         allData = [...allData, ...pageData];
 
@@ -75,7 +75,7 @@ const SearchInput = () => {
 
     try {
       const field = currentLanguage === "en" ? "Word" : "Perkataan";
-      const res = await axios.get(`https://bimsignbank-strapi.onrender.com/api/bims?populate=*&filters[${field}][$containsi]=${query}`);
+      const res = await axios.get(`/api/bims?populate=*&filters[${field}][$containsi]=${query}`);
       const results = transformData(res.data?.data || []);
 
       const seen = new Set(options.map(opt => currentLanguage === "en" ? opt.word : opt.perkataan));

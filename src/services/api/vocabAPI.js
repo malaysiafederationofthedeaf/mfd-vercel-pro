@@ -47,7 +47,7 @@ export const fetchVocabDetailFromAPI = async (vocabName) => {
 
   const formatted = formatString(vocabName);
   const capitalized = capitalizeFirstLetter(vocabName);
-  const endpoint = `https://bimsignbank-strapi.onrender.com/api/bims?populate=*&filters[Word][$containsi]=${capitalized}`;
+  const endpoint = `/api/bims?populate=*&filters[Word][$containsi]=${capitalized}`;
 
   try {
     const cachedData = findVocabInAlphabetData(vocabName);
