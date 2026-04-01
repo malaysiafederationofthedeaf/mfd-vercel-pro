@@ -47,14 +47,19 @@ export const fetchVocabDetailFromAPI = async (vocabName) => {
 
   const formatted = formatString(vocabName);
   const capitalized = capitalizeFirstLetter(vocabName);
-  const endpoint = `/api/bims?populate=*&filters[Word][$containsi]=${capitalized}`;
 
   try {
     const cachedData = findVocabInAlphabetData(vocabName);
     if (cachedData) return cachedData;
 
     console.log(`Fetching "${vocabName}" from API`);
-    const response = await axios.get(endpoint);
+    // Use params object so axios URL-encodes the value correctly (handles spaces, special chars)
+    const response = await axios.get('/api/bims', {
+      params: {
+        'populate': '*',
+        'filters[Word][$containsi]': capitalized
+      }
+    });
 
     const data = response.data?.data || [];
     const filtered = data
