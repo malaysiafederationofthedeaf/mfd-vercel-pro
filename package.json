@@ -3,7 +3,10 @@
     "version": "1.0.0",
     "private": true,
     "engines": {
-        "node": "18.x"
+        "node": "24.x"
+    },
+    "overrides": {
+        "iltorb": "npm:lodash.pick@^4.4.0"
     },
     "dependencies": {
         "@neondatabase/serverless": "^1.0.2",
