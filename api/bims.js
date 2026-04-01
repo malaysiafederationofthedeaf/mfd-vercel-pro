@@ -2,18 +2,39 @@ const { pool } = require('./db.js');
 
 module.exports = async function handler(req, res) {
   try {
-    const { pagination, filters, sort, populate } = req.query;
-
-    let page = 1;
-    let limit = 25;
-
-    if (pagination) {
-      if (pagination.page) page = parseInt(pagination.page);
-      if (pagination.pageSize) limit = parseInt(pagination.pageSize);
-      if (pagination.limit) limit = parseInt(pagination.limit);
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL is not set in Vercel. Please set it in Settings > Environment Variables!");
     }
 
+    let page = req.query['pagination[page]'] ? parseInt(req.query['pagination[page]']) : 1;
+    let limit = 25;
+    if (req.query['pagination[pageSize]']) limit = parseInt(req.query['pagination[pageSize]']);
+    else if (req.query['pagination[limit]']) limit = parseInt(req.query['pagination[limit]']);
+
     const offset = (page - 1) * limit;
+
+    const filters = {};
+    for (const key of Object.keys(req.query)) {
+      const match = key.match(/filters\[(.*?)\](\[(.*?)\])?/);
+      if (match) {
+        const field = match[1];
+        let op = match[3] || '$eq';
+        
+        // Deep properties parsing like filters[category_group][GroupCategory][$eq]
+        if (field === 'category_group' && match[3]) {
+          const deepMatch = key.match(/filters\[category_group\]\[(.*?)\]\[(.*?)\]/);
+          if (deepMatch) {
+            filters.category_group = filters.category_group || {};
+            filters.category_group[deepMatch[1]] = filters.category_group[deepMatch[1]] || {};
+            filters.category_group[deepMatch[1]][deepMatch[2]] = req.query[key];
+          }
+        } else {
+          filters[field] = filters[field] || {};
+          filters[field][op] = req.query[key];
+        }
+      }
+    }
+    const sort = req.query.sort;
 
     let baseQuery = `
       SELECT bims.id as "id", 
@@ -125,6 +146,9 @@ module.exports = async function handler(req, res) {
 
       if (row.cg_id) {
         attributes.category_group = {
+          KumpulanKategori: row.KumpulanKategori,
+          GroupCategory: row.GroupCategory,
+          Remark: row.cg_Remark,
           data: {
             id: row.cg_id,
             attributes: {
@@ -139,10 +163,9 @@ module.exports = async function handler(req, res) {
       }
 
       return {
+        ...attributes,
         id: row.id,
-        attributes: attributes,
-        // Flat structures appended for frontend compatibility if necessary
-        ...attributes
+        attributes: attributes
       };
     });
 

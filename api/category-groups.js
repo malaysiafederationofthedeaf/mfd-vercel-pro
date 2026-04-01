@@ -2,21 +2,22 @@ const { pool } = require('./db.js');
 
 module.exports = async function handler(req, res) {
   try {
-    const { pagination, filters } = req.query;
-    let page = 1;
-    let pageSize = 90;
-
-    if (pagination) {
-      if (pagination.page) page = parseInt(pagination.page);
-      if (pagination.pageSize) pageSize = parseInt(pagination.pageSize);
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL is not set in Vercel Environment Variables! Please add it in your project Settings > Environment Variables.");
     }
-    
+
+    let page = req.query['pagination[page]'] ? parseInt(req.query['pagination[page]']) : 1;
+    let pageSize = req.query['pagination[pageSize]'] ? parseInt(req.query['pagination[pageSize]']) : 90;
+
+    const opFilters = req.query['filters[Remark][$ne]'];
+    const hasUnpublishedFilter = opFilters === 'Unpublished';
+
     let resultRows = [];
     let countRows = [];
 
     const offset = (page - 1) * pageSize;
 
-    if (filters && filters.Remark && filters.Remark['$ne'] === 'Unpublished') {
+    if (hasUnpublishedFilter) {
        const resQuery = await pool.query(
          `SELECT id, kumpulan_kategori as "KumpulanKategori", group_category as "GroupCategory", remark as "Remark" 
           FROM category_groups 
