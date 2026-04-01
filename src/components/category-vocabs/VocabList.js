@@ -25,7 +25,8 @@ const VocabList = ({ vocabs, group, category }) => {
         const categoryTitle =
           category === undefined ? vocab.category : category;
 
-        const vocabImgSrc = Store.getSignImgSrc(vocab.perkataan);
+        const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
+        const vocabImgSrc = useBlobImages && vocab.imageUrl ? vocab.imageUrl : Store.getSignImgSrc(vocab.perkataan);
 
         const groupFormatted = Store.formatString(groupTitle);
         const categoryFormatted = Store.formatString(categoryTitle);

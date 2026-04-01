@@ -23,7 +23,8 @@ const transformVocabItem = (item) => ({
   tag: item.Tag || '',
   new: item.New || 'No',
   order: item.Order || '',
-  imgStatus: item.Image_Status || ''
+  imgStatus: item.Image_Status || '',
+  imageUrl: item.Image_Url || ''
 });
 
 // Get categories of a group

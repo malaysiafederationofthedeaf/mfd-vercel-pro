@@ -22,7 +22,8 @@ const AlphabetsList = ({ vocabs, alphabet }) => {
   return (
     <ListGroup flush>
       {vocabs.map((vocab, key) => {
-        const vocabImgSrc = Store.getSignImgSrc(vocab.perkataan);
+        const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
+        const vocabImgSrc = useBlobImages && vocab.imageUrl ? vocab.imageUrl : Store.getSignImgSrc(vocab.perkataan);
         const wordFormatted = Store.formatString(vocab.word);
         return (
           <Link key={key} to={`/alphabets/${alphabet}/${wordFormatted}`}>
