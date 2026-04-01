@@ -4,19 +4,22 @@ import { Store } from "../flux";
 // Get the best available image URL for a vocab item
 export const getVocabImageUrl = (vocab) => {
   const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
+  const blobBaseUrl = process.env.REACT_APP_BLOB_BASE_URL;
 
-  // If blob images are enabled and vocab has an imageUrl, use it
-  if (useBlobImages && vocab?.imageUrl) {
-    return vocab.imageUrl;
+  // If blob images are enabled, generate blob URL from perkataan
+  if (useBlobImages && blobBaseUrl && vocab?.perkataan) {
+    const encodedPerkataan = encodeURIComponent(vocab.perkataan.trim());
+    return `${blobBaseUrl}/vocab/${encodedPerkataan}.jpg`;
   }
 
-  // Fallback to Cloudinary
-  return Store.getSignImgSrc(vocab?.perkataan);
+  // No fallback to Cloudinary - return null to trigger error handling
+  return null;
 };
 
 // Get fallback image URL
 export const getFallbackImageUrl = () => {
-  return Store.getFallbackImage();
+  // Use a data URL placeholder instead of Cloudinary
+  return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+";
 };
 
 // Handle image load errors - try fallback, then give up

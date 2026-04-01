@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
              bims.perkataan as "Perkataan", 
              bims.word as "Word", 
              bims.tag as "Tag",
-             bims.image_url as "Image_Url", 
+
              bims."order" as "Order", 
              bims.new as "New", 
              bims.video as "Video", 
@@ -146,7 +146,6 @@ module.exports = async function handler(req, res) {
         Order: row.Order,
         New: row.New,
         Video: row.Video,
-        Image_Url: row.Image_Url,
         Image_Status: row.Image_Status,
         Video_Status: row.Video_Status,
         Remark: row.Remark,

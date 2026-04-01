@@ -73,7 +73,6 @@ export const fetchVocabDetailFromAPI = async (vocabName) => {
         new: item.New || 'No',
         order: item.Order || '',
         imgStatus: item.Image_Status || '',
-        imageUrl: item.Image_Url || ''
       }))
       .filter(
         (entry) =>

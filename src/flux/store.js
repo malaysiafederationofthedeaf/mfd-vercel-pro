@@ -193,6 +193,23 @@ class Store extends EventEmitter {
     return baseURL + filePathname;
   }
 
+  getSortedVocabsItems(language) {
+    if (!_store.vocabsItems) return [];
+    
+    // Transform to the same format as API response
+    const transformed = _store.vocabsItems.map(item => ({
+      groupCategory: item.category_group?.GroupCategory || `${item.Group}/${item.Category}`,
+      word: item.Word || '',
+      perkataan: item.Perkataan || '',
+      id: item.id,
+      attributes: item
+    }));
+    
+    // Sort by the language field
+    const sortField = language === 'en' ? 'word' : 'perkataan';
+    return transformed.sort((a, b) => a[sortField].localeCompare(b[sortField]));
+  }
+
   addChangeListener(callback) {
     this.on(Constants.CHANGE, callback);
   }
