@@ -138,34 +138,23 @@ class Store extends EventEmitter {
     return "https://youtu.be/" + videoId;
   }
 
-  // get image for Category from Vercel Blob
+  // get image for Category from Vercel Blob using untouched exact filenames
   getCategoryImgSrc(kumpulanKategori) {
     const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
-    const kategoriPublicId = "Category_" + kumpulanKategori
-      .replace(/&/g, "_")
-      .replace(/[()]/g, "")
-      .replace(/\s+/g, "_")
-      .replace(/_+/g, "_");
-    return `${baseUrl}/category/${kategoriPublicId}.jpg`;
+    const exactName = "Category_" + kumpulanKategori.trim();
+    return `${baseUrl}/Assets/category/${encodeURIComponent(exactName)}.jpg`;
   }
 
   getFallbackImage() {
     return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBOb3QgRm91bmQ8L3RleHQ+PC9zdmc+";
   }
 
-  // get image for vocab from Vercel Blob
+  // get image for vocab from Vercel Blob using untouched exact filenames
   getSignImgSrc(perkataan) {
     if (!perkataan) return this.getFallbackImage();
     const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
-    const perkataanPublicId = perkataan
-      .trim()
-      .replace(/&/g, "_")
-      .replace(/[()'']/g, "")
-      .replace(/,/g, "")
-      .replace(/!/g, "%21")
-      .replace(/\//g, "-")
-      .replace(/\s+/g, "_");
-    return `${baseUrl}/vocab/${perkataanPublicId}.jpg`;
+    const exactName = perkataan.trim();
+    return `${baseUrl}/Assets/vocab/${encodeURIComponent(exactName)}.jpg`;
   }
 
   // format string to lower case, replace space with dash, remove '?' and '/'
