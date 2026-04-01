@@ -96,8 +96,15 @@ const SelectedVocab = () => {
     );
   }
   
-  // return Error page if no Vocab Details are returned
-  if (!categoryVocab) return <ComingSoon />;
+  // Show debug info instead of ComingSoon so we know what word failed to load
+  if (!categoryVocab) return (
+    <Container fluid className="main-content-container px-4">
+      <div className="alert alert-warning mt-4">
+        <strong>No data found</strong> for vocab: <code>{decodedVocab}</code> (from URL: <code>{vocab}</code>)
+        <br/><small>Check the browser console (F12) for API logs.</small>
+      </div>
+    </Container>
+  );
 
   return (
     <>

@@ -166,8 +166,15 @@ const SelectedCategory = () => {
     );
   }
 
-  // Render coming soon if no data
-  if (!vocabs || vocabs.length === 0) return <ComingSoon />;
+  // Render empty state with debug info instead of ComingSoon
+  if (!vocabs || vocabs.length === 0) return (
+    <Container fluid className="main-content-container px-4">
+      <div className="alert alert-warning mt-4">
+        <strong>No data found</strong> for group: <code>{groupSelected}</code>, category: <code>{apiFormattedCategory}</code>
+        <br/><small>Check the browser console (F12) for API logs.</small>
+      </div>
+    </Container>
+  );
 
   // Render page
   return (
