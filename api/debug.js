@@ -22,9 +22,9 @@ module.exports = async function handler(req, res) {
     results.category_groups_columns = r.rows;
   } catch (e) { results.category_groups_columns_error = e.message; }
 
-  // 4. links table columns
+  // 4. links table columns (correct name)
   try {
-    const r = await pool.query(`SELECT column_name FROM information_schema.columns WHERE table_name='bims_category_group_links'`);
+    const r = await pool.query(`SELECT column_name FROM information_schema.columns WHERE table_name='bims_category_group_lnk'`);
     results.links_columns = r.rows;
   } catch (e) { results.links_columns_error = e.message; }
 
@@ -43,7 +43,7 @@ module.exports = async function handler(req, res) {
              bims.remark, bims.created_at,
              cg.id as cg_id, cg.kumpulan_kategori, cg.group_category
       FROM bims
-      LEFT JOIN bims_category_group_links links ON bims.id = links.bim_id
+      LEFT JOIN bims_category_group_lnk links ON bims.id = links.bim_id
       LEFT JOIN category_groups cg ON links.category_group_id = cg.id
       LIMIT 1
     `);
