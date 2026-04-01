@@ -4,6 +4,7 @@ import { Col, ListGroup, ListGroupItem, Row } from "shards-react";
 
 import { Store } from "../../flux";
 import VocabWordPerkataan from "../category-vocabs/VocabWordPerkataan";
+import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
 
 const AlphabetsList = ({ vocabs, alphabet }) => {
 
@@ -22,8 +23,7 @@ const AlphabetsList = ({ vocabs, alphabet }) => {
   return (
     <ListGroup flush>
       {vocabs.map((vocab, key) => {
-        const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
-        const vocabImgSrc = useBlobImages && vocab.imageUrl ? vocab.imageUrl : Store.getSignImgSrc(vocab.perkataan);
+        const vocabImgSrc = getVocabImageUrl(vocab);
         const wordFormatted = Store.formatString(vocab.word);
         return (
           <Link key={key} to={`/alphabets/${alphabet}/${wordFormatted}`}>
@@ -34,11 +34,8 @@ const AlphabetsList = ({ vocabs, alphabet }) => {
                     src={vocabImgSrc}
                     alt={vocab.word}
                     className="vocab-image"
-                    onError={(e) => {
-                      e.target.onerror = null; // prevent infinite loop
-                      e.target.src = Store.getFallbackImage();
-                    }
-                  }
+                    onError={(e) => handleImageError(e, vocab)}
+                  />
                   />
                 </Col>   
                 <Col className="pl-2 pr-0">

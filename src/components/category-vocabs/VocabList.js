@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Col, ListGroup, ListGroupItem, Row } from "shards-react";
 
-import { Store } from "../../flux";
-import VocabWordPerkataan from "./VocabWordPerkataan";
+import { Store } from "../../flux";import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
+
+const VocabList = ({ vocabs, group, category }) => {import VocabWordPerkataan from "./VocabWordPerkataan";
 
 const VocabList = ({ vocabs, group, category }) => {
   const trimWord = (word) => {
@@ -25,8 +26,7 @@ const VocabList = ({ vocabs, group, category }) => {
         const categoryTitle =
           category === undefined ? vocab.category : category;
 
-        const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
-        const vocabImgSrc = useBlobImages && vocab.imageUrl ? vocab.imageUrl : Store.getSignImgSrc(vocab.perkataan);
+        const vocabImgSrc = getVocabImageUrl(vocab);
 
         const groupFormatted = Store.formatString(groupTitle);
         const categoryFormatted = Store.formatString(categoryTitle);
@@ -46,11 +46,7 @@ const VocabList = ({ vocabs, group, category }) => {
                     src={vocabImgSrc}
                     alt={vocab.word}
                     className="vocab-image"
-                    onError={(e) => {
-                      e.target.onerror = null; // prevent infinite loop
-                      e.target.src = Store.getFallbackImage();
-                    }
-                  }
+                    onError={(e) => handleImageError(e, vocab)}
                   />
                 </Col>   
                 <Col className="pl-2 pr-0">

@@ -4,10 +4,10 @@ import ReactPlayer from 'react-player';
 
 import { Store } from "../../flux";
 import VocabWordPerkataan from "./VocabWordPerkataan";
+import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
 
 const VocabDetail = ({vocab}) => {
-    const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
-    const vocabImgSrc = useBlobImages && vocab.imageUrl ? vocab.imageUrl : Store.getSignImgSrc(vocab.perkataan);
+    const vocabImgSrc = getVocabImageUrl(vocab);
 
     return (
         <div className="selected-vocab">
@@ -23,11 +23,7 @@ const VocabDetail = ({vocab}) => {
                          src={vocabImgSrc} 
                          alt={vocab.word} 
                          className="selected-vocab-image"  
-                         onError={(e) => {
-                            e.target.onerror = null; // prevent infinite loop
-                            e.target.src = require("../../images/general/image-coming-soon.jpg");
-                        }
-                        }
+                         onError={(e) => handleImageError(e, vocab)}
                     />
                     </div>
                 </Col>                                

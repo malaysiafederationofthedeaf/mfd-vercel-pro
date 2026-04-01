@@ -7,6 +7,9 @@ import { zoomIn } from 'react-animations';
 
 import { Store } from "../../flux";
 import { getImageWithFallback } from "../components-overview/ImgSrc";
+import { getVocabImageUrl, getFallbackImageUrl } from "../../utils/imageUtils";
+
+const ZoomIn = styled.div`animation: .5s ${keyframes `${zoomIn}`}`;
 
 const ZoomIn = styled.div`animation: .5s ${keyframes `${zoomIn}`}`;  
 
@@ -18,9 +21,8 @@ const CategoryDetail = ({ categoryItem, group, groupKey, noOfCard }) => {
   const categoryFormatted = Store.formatString(categoryItem.category);
   const basePath = `/groups/${groupFormatted}`
   const linkToPath = categoryItem.new ? `${basePath}/${Store.formatString(categoryItem.word)}` : `${basePath}/${categoryFormatted}`;
-  const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
-  const imgSrc = categoryItem.new ? (useBlobImages && categoryItem.imageUrl ? categoryItem.imageUrl : Store.getSignImgSrc(categoryItem.perkataan)) : Store.getCategoryImgSrc(categoryItem.kategori);
-  const fallback = Store.getFallbackImage();
+  const imgSrc = categoryItem.new ? getVocabImageUrl(categoryItem) : Store.getCategoryImgSrc(categoryItem.kategori);
+  const fallback = getFallbackImageUrl();
   const [bgImage, setBgImage] = useState("");
 
   useEffect(() => {

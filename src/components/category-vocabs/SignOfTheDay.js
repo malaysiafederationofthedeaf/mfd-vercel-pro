@@ -9,6 +9,7 @@ import i18next from "i18next";
 
 import PageTitle from "../common/PageTitle";
 import { Store } from "../../flux";
+import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
 
 const ZoomIn = styled.div`
   animation: 0.5s ${keyframes`${zoomIn}`};
@@ -74,8 +75,7 @@ const SignOfTheDay = ({ wordItem }) => {
     Store.formatGroupCategory(groupName) +
     Store.formatGroupCategory(groupCat) +
     Store.formatString(wordItem.word);
-  const useBlobImages = process.env.REACT_APP_USE_BLOB_IMAGES === "true";
-  const imgSrc = useBlobImages && wordItem.imageUrl ? wordItem.imageUrl : Store.getSignImgSrc(wordItem.perkataan);
+const imgSrc = getVocabImageUrl(wordItem);
 
   const { t } = useTranslation(["", "word"]);
 
@@ -93,6 +93,7 @@ const SignOfTheDay = ({ wordItem }) => {
                   src={imgSrc}
                   alt={wordItem.word}
                   className="card-post__image"
+                  onError={(e) => handleImageError(e, wordItem)}
                 />
               </ZoomIn>
             </Col>
