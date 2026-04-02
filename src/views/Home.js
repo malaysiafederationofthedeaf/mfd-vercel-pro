@@ -13,6 +13,7 @@ import { Store } from "../flux";
 import { getGroupItems, getCategoriesOfGroup } from "../services/api/categoryAPI";
 import { getFeaturedVideos } from "../services/api/featuredVideosAPI";
 import { getSignOfTheDayLightweight } from "../services/api/signOfTheDayAPI";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
 
 const newSignsCache = {};
 
@@ -37,6 +38,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [currentLang] = useState(cookies.get("i18next") || "ms");
   const isMalay = i18n.language === "ms";
+
+  const displayGroups = groups.filter(group => group.group !== "New Signs");
+  const { visibleItems: visibleGroups, setTargetRef } = useInfiniteScroll(displayGroups, 3, 3);
 
   // Call the preload function when component mounts
   useEffect(() => {
@@ -110,9 +114,7 @@ const Home = () => {
         <div className="category-list-wrapper">
           <Row>
             {/* Only display groups with Remark="Home" */}
-            {groups
-              .filter(group => group.group !== "New Signs")
-              .map((group, key) => {
+            {visibleGroups.map((group, key) => {
                 const groupName = isMalay ? group.kumpulan : group.group;
                 const groupKey = group.group;
                 
@@ -126,6 +128,11 @@ const Home = () => {
                   />              
                 );
               })}
+            {displayGroups.length > visibleGroups.length && (
+              <Col sm="12" className="d-flex justify-content-center align-items-center py-4" style={{ opacity: 0.5 }}>
+                <div ref={setTargetRef} className="spinner-border text-primary spinner-border-sm" role="status" />
+              </Col>
+            )}
           </Row>
           <Row>
             {/* View all categories button */}

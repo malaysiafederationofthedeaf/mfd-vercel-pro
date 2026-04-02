@@ -5,15 +5,18 @@ import { Col, ListGroup, ListGroupItem, Row } from "shards-react";
 import { Store } from "../../flux";
 import { getVocabImageUrl, handleImageError } from "../../utils/imageUtils";
 import VocabWordPerkataan from "./VocabWordPerkataan";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 
 const VocabList = ({ vocabs, group, category }) => {
+  const { visibleItems, setTargetRef } = useInfiniteScroll(vocabs, 20, 20);
+
   const trimWord = (word) => {
-    console.log("word: " + word)
+    // console.log("word: " + word)
     const length = word.length
     if(length >= 45) {
       if(word.includes('(') && word.includes(')')) {
         word = word.substring(0, word.indexOf('('));
-        console.log("trimmed: " + word)
+        // console.log("trimmed: " + word)
       }
     } 
     return word;
@@ -21,7 +24,7 @@ const VocabList = ({ vocabs, group, category }) => {
 
   return (
     <ListGroup flush>
-      {vocabs.map((vocab, key) => {
+      {visibleItems.map((vocab, key) => {
         const groupTitle = group === undefined ? vocab.group : group;
         const categoryTitle =
           category === undefined ? vocab.category : category;
@@ -62,6 +65,11 @@ const VocabList = ({ vocabs, group, category }) => {
           </Link>
         );
       })}
+      {vocabs?.length > visibleItems.length && (
+        <div ref={setTargetRef} style={{ height: "20px", display: "flex", justifyContent: "center", alignItems: "center", width: "100%", opacity: 0.5 }}>
+          <div className="spinner-border text-primary spinner-border-sm" role="status" />
+        </div>
+      )}
     </ListGroup>
   );
 };
