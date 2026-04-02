@@ -10,6 +10,8 @@
     },
     "dependencies": {
         "@neondatabase/serverless": "^1.0.2",
+        "@upstash/ratelimit": "^2.0.8",
+        "@vercel/kv": "^3.0.0",
         "aos": "^3.0.0-beta.6",
         "axios": "^1.7.3",
         "body-parser": "^2.2.0",

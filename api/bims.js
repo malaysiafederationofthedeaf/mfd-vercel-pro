@@ -1,7 +1,28 @@
 const { pool } = require('./db.js');
+const { kv } = require('@vercel/kv');
+const { Ratelimit } = require('@upstash/ratelimit');
+
+// Create a new ratelimiter that allows 30 requests per 10 seconds
+const ratelimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(30, '10 s'),
+});
 
 module.exports = async function handler(req, res) {
   try {
+    // Optional Rate Limiting Check (runs globally before anything if kv is linked)
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+      const { success, limit, reset, remaining } = await ratelimit.limit(`ratelimit_${ip}`);
+      
+      res.setHeader('X-RateLimit-Limit', limit);
+      res.setHeader('X-RateLimit-Remaining', remaining);
+      res.setHeader('X-RateLimit-Reset', reset);
+
+      if (!success) {
+        return res.status(429).json({ error: 'Rate limit exceeded. Too many requests.' });
+      }
+    }
     if (!process.env.DATABASE_URL) {
       throw new Error("DATABASE_URL is not set in Vercel. Please set it in Settings > Environment Variables!");
     }
@@ -179,6 +200,7 @@ module.exports = async function handler(req, res) {
       };
     });
 
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
     res.status(200).json({
       data: data,
       meta: {

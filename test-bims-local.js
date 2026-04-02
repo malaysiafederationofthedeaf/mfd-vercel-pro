@@ -11,6 +11,7 @@ async function run() {
     let statusCode = null;
 
     let res = {
+        setHeader: (name, value) => { console.log(`Header Set: ${name}: ${value}`); },
         status: (code) => {
             statusCode = code;
             return {

@@ -9,6 +9,7 @@ const req = {
 };
 
 const res = {
+  setHeader: (name, value) => console.log('HEADER:', name, value),
   status: (code) => ({
     json: (data) => console.log('STATUS:', code, JSON.stringify(data, null, 2))
   })
