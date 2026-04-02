@@ -139,9 +139,11 @@ class Store extends EventEmitter {
   }
 
   // get image for Category from Vercel Blob using untouched exact filenames
+  // Blob filenames match the kategori name exactly (e.g. "Aktiviti & Peristiwa.jpg")
   getCategoryImgSrc(kumpulanKategori) {
+    if (!kumpulanKategori) return this.getFallbackImage();
     const baseUrl = process.env.REACT_APP_BLOB_BASE_URL || "";
-    const exactName = "Category_" + kumpulanKategori.trim();
+    const exactName = kumpulanKategori.trim();
     return `${baseUrl}/category/${encodeURIComponent(exactName)}.jpg`;
   }
 
